@@ -45,31 +45,21 @@ function App() {
   };
 
   return (
-    <div className="stopwatch-container">
-      <h1>Stopwatch</h1>
-      <div className="timer-display">{formatTime(time)}</div>
-      <div className="controls">
-        <button onClick={handleStartStop}>
-          {running ? 'Stop' : 'Start'}
-        </button>
-        <button onClick={handleLap} disabled={!running}>
-          Lap
-        </button>
-        <button onClick={handleReset}>
-          Reset
-        </button>
-      </div>
-      <div className="laps">
-        <h2>Laps</h2>
-        <ul>
-          {laps.map((lap, index) => (
-            <li key={index}>
-              Lap {index + 1}: {formatTime(lap)}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    <div className={`stopwatch-container ${running ? 'running' : ''}`}>
+  <div className="total-time">Total – 3hr 15min</div>
+
+  <div className="timer-display">
+    <div className="time">{formatTime(time).slice(0, 5)}<br />HOURS</div>
+  </div>
+
+  <div className="controls">
+    <button className="control-btn">←</button>
+    <button className="control-btn start-stop-btn" onClick={handleStartStop}>
+      {running ? 'STOP' : 'START'}
+    </button>
+    <button className="control-btn">⚙️</button>
+  </div>
+</div>
   )
 }
 

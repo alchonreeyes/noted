@@ -1,24 +1,16 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+:root {
+  --timer-size: 300px;
+  --progress-seconds: 0deg;
+  --lap-progress-seconds: 0deg;
+  --start-color: #34c759; /* Green */
+  --stop-color: #ff3b30;  /* Red */
+  --lap-color: #333333;
+  --text-color: #fff;
+  --bg-color: #000;
+  --loader-gray: #2c2c2e;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
+@keyframes loading-spinner {
   from {
     transform: rotate(0deg);
   }
@@ -27,16 +19,173 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+body {
+  background-color: rgb(255, 255, 255);
+  color: var(--text-color);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding-top: 5vh;
 }
 
-.card {
-  padding: 2em;
+.stopwatch-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
 }
 
-.read-the-docs {
-  color: #888;
+.timer-display {
+  position: relative;
+  width: var(--timer-size);
+  height: var(--timer-size);
+  border-radius: 50%;
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3.5rem;
+  font-weight: 200;
+  letter-spacing: 1px;
+  font-variant-numeric: tabular-nums;
+  background: var(--bg-color); /* Base background */
+  overflow: hidden; /* Hide overflowing pseudo-element */
+}
+
+.timer-display::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: conic-gradient(
+    transparent 0%,
+    var(--loader-gray) 50%,
+    transparent 100%
+  );
+  animation: loading-spinner 1.5s linear infinite;
+}
+
+.timer-display .time {
+  position: relative; /* Ensure text is on top of the pseudo-element */
+  z-index: 1;
+}
+
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.controls button {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: none;
+  font-size: 1rem;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Add a class 'running' to the container when the timer is active */
+.stopwatch-container.running .start-stop-btn {
+  background-color: var(--stop-color);
+  color: #ffcdd2;
+}
+
+.stopwatch-container:not(.running) .start-stop-btn {
+  background-color: var(--start-color);
+  color: #dff7e5;
+}
+
+.lap-reset-btn {
+  background-color: var(--lap-color);
+}
+
+.laps {
+  width: 100%;
+  border-top: 1px solid #333;
+  padding-top: 20px;
+}
+
+.laps h2 {
+  display: none; /* Hidden as the list is self-explanatory */
+}
+
+.laps ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.laps li {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 10px;
+  border-bottom: 1px solid #333;
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.laps li:first-child {
+  color: var(--start-color); /* Highlight the current lap */
+}
+
+.laps li:nth-child(2) {
+  color: var(--stop-color); /* Highlight the slowest lap if you implement that logic */
+}
+.total-time {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  color: #aaa;
+}
+
+.timer-display {
+  background: conic-gradient(
+    var(--start-color) var(--progress-seconds),
+    var(--loader-gray) var(--progress-seconds)
+  );
+  transition: background 0.3s ease;
+}
+
+.time {
+  text-align: center;
+  font-size: 2.5rem;
+  line-height: 1.2;
+  white-space: pre-line;
+}
+
+.control-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: var(--lap-color);
+  color: var(--text-color);
+  font-size: 1.2rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.start-stop-btn {
+  background-color: var(--start-color);
+  color: #fff;
+  font-weight: bold;
+}
+
+.stopwatch-container.running .start-stop-btn {
+  background-color: var(--stop-color);
 }
