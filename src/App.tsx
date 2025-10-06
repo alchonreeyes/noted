@@ -1,34 +1,75 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect, useRef } from 'react'
+
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [time, setTime] = useState(0);
+  const [running, setRunning] = useState(false);
+  const [laps, setLaps] = useState<number[]>([]);
+  const timerRef = useRef<number | undefined>();
+
+  useEffect(() => {
+    if (running) {
+      timerRef.current = window.setInterval(() => {
+        setTime(prevTime => prevTime + 10);
+      }, 10);
+    } else {
+      clearInterval(timerRef.current);
+    }
+
+    return () => clearInterval(timerRef.current);
+  }, [running]);
+
+  const handleStartStop = () => {
+    setRunning(!running);
+  };
+
+  const handleLap = () => {
+    if (running) {
+      setLaps(prevLaps => [...prevLaps, time]);
+    }
+  };
+
+  const handleReset = () => {
+    setRunning(false);
+    setTime(0);
+    setLaps([]);
+  };
+
+  const formatTime = (timeMs: number) => {
+    const minutes = Math.floor(timeMs / 60000);
+    const seconds = Math.floor((timeMs % 60000) / 1000);
+    const milliseconds = Math.floor((timeMs % 1000) / 10);
+
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`;
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div className="stopwatch-container">
+      <h1>Stopwatch</h1>
+      <div className="timer-display">{formatTime(time)}</div>
+      <div className="controls">
+        <button onClick={handleStartStop}>
+          {running ? 'Stop' : 'Start'}
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <button onClick={handleLap} disabled={!running}>
+          Lap
+        </button>
+        <button onClick={handleReset}>
+          Reset
+        </button>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <div className="laps">
+        <h2>Laps</h2>
+        <ul>
+          {laps.map((lap, index) => (
+            <li key={index}>
+              Lap {index + 1}: {formatTime(lap)}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   )
 }
 
