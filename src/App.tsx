@@ -35,7 +35,6 @@ function App() {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`;
   };
 
-  // Calculate progress percentage based on seconds (resets every minute)
   const progressPercentage = (time / 60000) * 100;
 
   return (
@@ -47,7 +46,6 @@ function App() {
 
       <div style={styles.timerSection}>
         <svg style={styles.progressRing} viewBox="0 0 200 200">
-          {/* Background circle */}
           <circle
             cx="100"
             cy="100"
@@ -56,7 +54,6 @@ function App() {
             stroke="#f0f0f0"
             strokeWidth="8"
           />
-          {/* Progress circle */}
           <circle
             cx="100"
             cy="100"
@@ -70,7 +67,6 @@ function App() {
             transform="rotate(-90 100 100)"
             style={{ transition: 'stroke-dashoffset 0.1s linear' }}
           />
-          {/* Tick marks */}
           {[...Array(60)].map((_, i) => {
             const angle = (i * 6) - 90;
             const isLarge = i % 5 === 0;
@@ -239,6 +235,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   stopButton: {
     backgroundColor: '#ff5252',
+    boxShadow: '0 4px 12px rgba(255,82,82,0.2)',
   },
 };
 
